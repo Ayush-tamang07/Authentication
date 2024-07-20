@@ -3,6 +3,7 @@ import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 export const register = (req, res) => {
     const { username, email, password } = req.body
+    console.log(req.body);
     if (!username || !email || !password) return res.status(400).json({ error: "Enter All Details Correctly" })
     const uniqueQuery = 'select * from users where username = ? or email = ? '
     db.query(uniqueQuery, [username, email], async (err, result) => {
@@ -12,7 +13,7 @@ export const register = (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 10)
         db.query(insertQuery, [username, email, hashedPassword], (err, result) => {
             if (err) return res.status(500).json({ error: "Insertion Failed" })
-            res.status(200).json({ message: "User Registerd Successfully", result })
+            res.status(200).json({ message: "User Registered Successfully", result })
         })
     })
 }
@@ -34,7 +35,7 @@ export const login = (req, res) => {
             if (err) return res.status(500).json({ error: err.message });
             if (!isMatch) return res.status(404).json({ error: "Username or Password Didn't Match" });
             const token = jwt.sign({ id: user.id, username: user.username }, process.env.JWT_SECRET, { expiresIn: '1h' });
-            res.status(200).cookie("token", token, { maxAge: 24 * 60 * 60 * 1000 }).json({ message: "Logged In Suceessfully" });
+            res.status(200).cookie("token", token, { maxAge: 24 * 60 * 60 * 1000 }).json({ message: "Logged In Successfully" });
         });
     });
 

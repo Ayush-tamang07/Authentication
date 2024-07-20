@@ -1,6 +1,6 @@
 import db from "../db.js"
 
-export const addblog = (req, res) => {
+export const addBlog = (req, res) => {
     const { title, content } = req.body
     if (!title || !content) {
         return res.status(400).json({ error: "Fill In all Fields Carefully" })
@@ -10,7 +10,6 @@ export const addblog = (req, res) => {
         if (err) return res.status(500).json({ err: "SQL Error", err: err })
         res.status(200).json({ message: result })
     })
-
 }
 export const updateBlog = (req, res) => {
     const { title, content } = req.body;
@@ -21,8 +20,8 @@ export const updateBlog = (req, res) => {
         return res.status(400).json({ err: "Please provide the id for the blog" });
     }
 
-    const searchsql = 'SELECT user_id FROM posts WHERE id = ?';
-    db.query(searchsql, [id], (err, result) => {
+    const searchSQL = 'SELECT user_id FROM posts WHERE id = ?';
+    db.query(searchSQL, [id], (err, result) => {
         if (err) return res.status(500).json({ err: "SQL Error", err: err });
 
         if (result.length === 0) {
@@ -35,8 +34,8 @@ export const updateBlog = (req, res) => {
             return res.status(403).json({ err: "Unauthorized" });
         }
 
-        const updatesql = 'UPDATE posts SET title = ?, content = ? WHERE id = ?';
-        db.query(updatesql, [title, content, id], (err, result) => {
+        const updateSQL = 'UPDATE posts SET title = ?, content = ? WHERE id = ?';
+        db.query(updateSQL, [title, content, id], (err, result) => {
             if (err) return res.status(500).json({ err: "SQL Error", err: err });
 
             return res.status(200).json({ message: "Blog updated successfully" });
